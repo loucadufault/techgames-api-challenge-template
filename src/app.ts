@@ -17,7 +17,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 if (port == "") {
-    // tslint:disable-next-line:no-console
     console.log("Missing environment variables for configuration (check .env.example and create a .env)")
     process.exit(1);
 }
@@ -37,7 +36,6 @@ app.route("/articles").post(async (req, res) =>
         console.log(req.body.title);
         
         const article = new models.Article({
-            _id: "asdasdas",
             title : title,
             subtitle : subtitle,
             body : body,
@@ -45,10 +43,10 @@ app.route("/articles").post(async (req, res) =>
           });
 
         await article.save(function(err, doc) {
-            console.log(doc);
+            console.log(err);
         });
         
-        res.json({
+        res.status(200).json({
             "_id" : article._id,
             "title" : title,
             "subtitle" : subtitle,
@@ -58,6 +56,24 @@ app.route("/articles").post(async (req, res) =>
     } else {
         res.status(400).send("One of the parameters is missing from the body.");
     }
+});
+
+app.route("/articles").get(function(req, res)
+{
+    models.Article.find({}).then(function (articles) {
+        res.status(200).send(articles);
+    });
+});
+
+app.route("/articles/:articleId").get(function(req, res)
+{
+    if (req.params.articleID)
+    return models.Article.findById(req.params.articleId, function(err, article) {
+        if (err) {
+            res.status(404).send("The article does not exist");
+        }
+        return res.send(article);
+      });   
 });
 
 app.use((req: Request, res: Response) => {

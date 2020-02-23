@@ -2,15 +2,10 @@ import mongoose from 'mongoose';
 import { ObjectID } from 'mongodb';
 
 const articleSchema = new mongoose.Schema({
-    // _id: {
-    //     type: String,
-    //     unique: true,
-
-    // },
     title: {
-    type: String,
-    unique: true,
-    required: true
+        type: String,
+        unique: false,
+        required: true
     },
     subtitle: {
         type: String,
