@@ -2,6 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
+import models, { server } from "./server";
+
 import { Application, Request, Response } from "express";
 import { PassThrough } from "stream";
 
@@ -29,8 +31,12 @@ app.route("/articles").post(function(req, res)
     const subtitle = req.body.subtitle;
     const body = req.body.body;
     const author = req.body.author;
+
     if (title && subtitle && body && author) {
         console.log(req.body.title);
+
+        //TODO ssave to db
+
         res.json({
             "_id" : "ID",
             "title" : title,
