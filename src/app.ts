@@ -67,13 +67,32 @@ app.route("/articles").get(function(req, res)
 
 app.route("/articles/:articleId").get(function(req, res)
 {
-    if (req.params.articleID)
+    if (isNaN(parseInt(req.params.articleId))) {
+        res.status(400).send("The article id isn't a valid id");
+    }
     return models.Article.findById(req.params.articleId, function(err, article) {
         if (err) {
             res.status(404).send("The article does not exist");
         }
         return res.send(article);
       });   
+});
+
+app.route("/articles/:articleId").delete(function(req, res) {
+    if (isNaN(parseInt(req.params.articleId))) {
+        res.status(400).send("The request was bad (e.g invalid id)");
+    }
+    
+    const article = models.Article.findById(req.params.articleId, function(err, article) {
+      });   
+
+    models.Article.findByIdAndDelete(req.params.articleId, function (err) {
+        if (err) {
+            res.status(404).send("The article does not exist");
+        } else {
+            res.status(200).send(article);
+        }
+    }); 
 });
 
 app.use((req: Request, res: Response) => {
