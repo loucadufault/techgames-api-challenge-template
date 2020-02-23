@@ -6,6 +6,7 @@ import models, { server } from "./server";
 
 import { Application, Request, Response } from "express";
 import { PassThrough } from "stream";
+import { ObjectID } from "mongodb";
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ app.route("/status").get(function(req, res)
     res.json({"status": "Up"});
 });
 
-app.route("/articles").post(function(req, res)
+app.route("/articles").post(async (req, res) =>
 {   const title = req.body.title;
     const subtitle = req.body.subtitle;
     const body = req.body.body;
@@ -34,11 +35,21 @@ app.route("/articles").post(function(req, res)
 
     if (title && subtitle && body && author) {
         console.log(req.body.title);
+        
+        const article = new models.Article({
+            _id: "asdasdas",
+            title : title,
+            subtitle : subtitle,
+            body : body,
+            author : author
+          });
 
-        //TODO ssave to db
-
+        await article.save(function(err, doc) {
+            console.log(doc);
+        });
+        
         res.json({
-            "_id" : "ID",
+            "_id" : article._id,
             "title" : title,
             "subtitle" : subtitle,
             "body" : body,
