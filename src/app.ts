@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import { Application, Request, Response } from "express";
+import { PassThrough } from "stream";
 
 dotenv.config();
 
@@ -24,8 +25,22 @@ app.route("/status").get(function(req, res)
 });
 
 app.route("/articles").post(function(req, res)
-{
-
+{   const title = req.body.title;
+    const subtitle = req.body.subtitle;
+    const body = req.body.body;
+    const author = req.body.author;
+    if (title && subtitle && body && author) {
+        console.log(req.body.title);
+        res.json({
+            "_id" : "ID",
+            "title" : title,
+            "subtitle" : subtitle,
+            "body" : body,
+            "author" : author
+          })
+    } else {
+        res.status(400).send("One of the parameters is missing from the body.");
+    }
 });
 
 app.use((req: Request, res: Response) => {
