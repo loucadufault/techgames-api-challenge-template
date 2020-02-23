@@ -18,6 +18,16 @@ if (port == "") {
     process.exit(1);
 }
 
+app.route("/status").get(function(req, res)
+{
+    res.json({"status": "Up"});
+});
+
+app.route("/articles").post(function(req, res)
+{
+
+});
+
 app.use((req: Request, res: Response) => {
     res.status(500).send({
         status: 500,
