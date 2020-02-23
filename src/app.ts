@@ -74,7 +74,7 @@ app.route("/articles/:articleId").get(function(req, res)
         if (err) {
             res.status(404).send("The article does not exist");
         }
-        res.send(article);
+        res.status(200).send(article);
       });   
 });
 
@@ -82,10 +82,20 @@ app.route("/articles/:articleId").put(function(req, res) {
     if (isNaN(parseInt(req.params.articleId))) {
         res.status(400).send("The article id isn't an ObjectID");
     }
+    const keyToUpdate = Object.keys(req.body)[0];
 
-    const article = models.Article.findById(req.params.articleId, function(err, article) {
-    }); 
-})
+    models.Article.findByIdAndUpdate({ _id: req.params.articleId },
+        {keyToUpdate: req.body.keyToUpdate},
+        function(err, result) {
+        if (err) {
+            res.status(400).send("article by that id does not exist");
+        };
+
+        models.Article.findById(req.params.articleId, function(err, article) {
+            res.status(200).send(article);
+        });   
+    });
+});
 
 app.route("/articles/:articleId").delete(function(req, res) {
     if (isNaN(parseInt(req.params.articleId))) {
